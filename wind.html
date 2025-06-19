@@ -516,7 +516,7 @@
             <ul class="hidden md:flex space-x-4 lg:space-x-8 flex-wrap justify-center text-sm md:text-base mx-auto">
                 <li><a href="index.html" class="nav-link">Homepage</a></li>
                 <li><a href="discord.html" class="nav-link">Discord Time</a></li>
-                <li><a href="window.html" class="nav-link">Window Opener</a></li>
+                <li><a href="#" class="nav-link">Window Opener</a></li>
                 <li><a href="calc.html" class="nav-link">Calculator</a></li>
                 <li><a href="support.html" class="nav-link">Support</a></li>
             </ul>
@@ -562,18 +562,35 @@
                     <span class="maximize"></span>
                 </div>
             </div>
-       -
     <input id="urlInput" type="text" placeholder="Enter website URL (e.g. https://example.com)">
     <button onclick="openWebsite()">Open Website</button>
     <div class="message" id="message"></div>
-    <div class="qrcode-container" id="qrcode"></div>
-  
-
                 </div>
         </div>
     </main>
 
     <script>
+
+      function openWebsite() {
+      const input = document.getElementById('urlInput');
+      const msg = document.getElementById('message');
+      const qrDiv = document.getElementById('qrcode');
+      let url = input.value.trim();
+      msg.textContent = '';
+      qrDiv.innerHTML = ''; // Clear previous QR code
+
+      if (!url) {
+        msg.textContent = 'Please enter a valid URL.';
+        return;
+      }
+
+      const fullUrl = url.startsWith('http://') || url.startsWith('https://') ? url : 'https://' + url;
+
+      try {
+        new URL(fullUrl);
+        window.open(fullUrl, "_blank", "width=1500,height=800");
+
+          
         document.addEventListener('DOMContentLoaded', () => {
             const darkModeToggleMobile = document.getElementById('darkModeToggle');
             const darkModeToggleDesktop = document.getElementById('darkModeToggleDesktop');
