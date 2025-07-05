@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MoonHook</title>
+  <style>
+    body {
+      background-color: #0d0d0d;
+      color: #f1f1f1;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #121212;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 0 15px #222;
+    }
+    header h1 {
+      color: #4f94ff;
+      font-size: 1.5rem;
+      margin: 0;
+    }
+    main {
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .input-group label {
+      display: block;
+      margin-bottom: 0.3rem;
+      font-weight: bold;
+    }
+    .input-group input,
+    .input-group textarea {
+      width: 100%;
+      padding: 0.75rem;
+      background: #1a1a1a;
+      color: white;
+      border: 1px solid #444;
+      border-radius: 0.5rem;
+    }
+    .embed-area {
+      background-color: #1c1c1c;
+      padding: 1rem;
+      border: 1px solid #333;
+      border-radius: 0.75rem;
+    }
+    .button {
+      padding: 0.75rem 1.25rem;
+      background-color: #4f94ff;
+      border: none;
+      border-radius: 0.5rem;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .button:hover {
+      background-color: #3b7ddb;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🌙 MoonHook</h1>
+  </header>
+  <main>
+    <div class="input-group">
+      <label for="webhook">Webhook URL</label>
+      <input type="url" id="webhook" placeholder="https://discord.com/api/webhooks/..." />
+    </div>
+
+    <div class="input-group">
+      <label for="message">Message Content</label>
+      <textarea id="message" rows="4" placeholder="Message text (optional if using embed only)"></textarea>
+    </div>
+
+    <div class="embed-area">
+      <h2>Embed</h2>
+      <div class="input-group">
+        <label for="title">Title</label>
+        <input type="text" id="title" />
+      </div>
+      <div class="input-group">
+        <label for="description">Description</label>
+        <textarea id="description" rows="4"></textarea>
+      </div>
+      <div class="input-group">
+        <label for="footer">Footer</label>
+        <input type="text" id="footer" />
+      </div>
+      <div class="input-group">
+        <label for="thumbnail">Thumbnail URL</label>
+        <input type="url" id="thumbnail" />
+      </div>
+      <div class="input-group">
+        <label for="timestamp">Include Timestamp</label>
+        <input type="checkbox" id="timestamp" />
+      </div>
+    </div>
+
+    <button class="button" onclick="sendWebhook()">Send Webhook</button>
+  </main>
+
+  <script>
+    function sendWebhook() {
+      const webhook = document.getElementById('webhook').value;
+      const content = document.getElementById('message').value;
+      const title = document.getElementById('title').value;
+      const description = document.getElementById('description').value;
+      const footer = document.getElementById('footer').value;
+      const thumbnail = document.getElementById('thumbnail').value;
+      const useTimestamp = document.getElementById('timestamp').checked;
+
+      const embed = {
+        title,
+        description,
+        footer: footer ? { text: footer } : undefined,
+        thumbnail: thumbnail ? { url: thumbnail } : undefined,
+        timestamp: useTimestamp ? new Date().toISOString() : undefined
+      };
+
+      const payload = {
+        content,
+        embeds: [embed]
+      };
+
+      fetch(webhook, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      }).then(res => {
+        if (res.ok) {
+          alert('Message sent!');
+        } else {
+          alert('Failed to send message.');
+        }
+      }).catch(err => {
+        alert('Error: ' + err.message);
+      });
+    }
+  </script>
+</body>
+</html>
