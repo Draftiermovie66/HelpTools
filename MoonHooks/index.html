@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>MoonHook - Advanced Webhook Sender</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      background: #0e0e10;
+      color: #f0f0f0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      padding: 2rem;
+      margin: 0;
+    }
+
+    .container {
+      background: #1f1f23;
+      padding: 2rem;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 600px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 1rem;
+      font-size: 1.8rem;
+    }
+
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.25rem;
+      background: #2c2c31;
+      border: 1px solid #444;
+      border-radius: 6px;
+      color: #fff;
+    }
+
+    button {
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      background: #5865f2;
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #4752c4;
+    }
+
+    .embed {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: #2c2c31;
+      border-radius: 8px;
+    }
+
+    .status {
+      margin-top: 1rem;
+      text-align: center;
+      font-size: 0.9rem;
+      min-height: 1.2rem;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid #f3f3f3;
+      border-top: 2px solid #5865f2;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      vertical-align: middle;
+      margin-right: 5px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .flex {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>MoonHook Advanced</h1>
+
+    <label>Webhook URL</label>
+    <input type="text" id="webhookUrl" placeholder="https://discord.com/api/webhooks/...">
+
+    <label>Username (optional)</label>
+    <input type="text" id="username" placeholder="Override username">
+
+    <label>Avatar URL (optional)</label>
+    <input type="text" id="avatar" placeholder="Override avatar URL">
+
+    <label>Message Content (optional)</label>
+    <textarea id="message" rows="2" placeholder="Message outside embeds"></textarea>
+
+    <div id="embeds"></div>
+    <button id="addEmbed">Add Embed</button>
+    <button id="sendBtn">Send Message</button>
+
+    <div class="status" id="status"></div>
+  </div>
+
+  <template id="embedTemplate">
+    <div class="embed">
+      <h3>Embed</h3>
+      <label>Title</label>
+      <input type="text" placeholder="Title">
+      <label>Description</label>
+      <textarea rows="2" placeholder="Description"></textarea>
+      <label>Color (hex e.g. #ff0000)</label>
+      <input type="text" placeholder="#5865F2">
+      <label>URL</label>
+      <input type="text" placeholder="https://">
+      <label>Image URL</label>
+      <input type="text" placeholder="https://">
+      <label>Thumbnail URL</label>
+      <input type="text" placeholder="https://">
+      <label>Footer Text</label>
+      <input type="text" placeholder="Footer text">
+      <button class="removeEmbed">Remove Embed</button>
+    </div>
+  </template>
+
+  <script>
+    const sendBtn = document.getElementById('sendBtn');
+    const addEmbedBtn = document.getElementById('addEmbed');
+    const embedsDiv = document.getElementById('embeds');
+    const embedTemplate = document.getElementById('embedTemplate').content;
+    const statusDiv = document.getElementById('status');
+
+    const webhookInput = document.getElementById('webhookUrl');
+    const usernameInput = document.getElementById('username');
+    const avatarInput = document.getElementById('avatar');
+    const messageInput = document.getElementById('message');
+
+    // Load saved webhook
+    if (localStorage.getItem('lastWebhook')) {
+      webhookInput.value = localStorage.getItem('lastWebhook');
+    }
+
+    addEmbedBtn.onclick = () => {
+      const clone = embedTemplate.cloneNode(true);
+      clone.querySelector('.removeEmbed').onclick = (e) => {
+        e.target.closest('.embed').remove();
+      };
+      embedsDiv.appendChild(clone);
+    };
+
+    sendBtn.onclick = async () => {
+      const url = webhookInput.value.trim();
+      const msg = messageInput.value.trim();
+      const username = usernameInput.value.trim();
+      const avatar = avatarInput.value.trim();
+
+      if (!url) {
+        statusDiv.textContent = 'Please provide the webhook URL.';
+        statusDiv.style.color = 'orange';
+        return;
+      }
+
+      localStorage.setItem('lastWebhook', url);
+
+      statusDiv.innerHTML = '<span class="spinner"></span> Sending...';
+      statusDiv.style.color = '#fff';
+
+      const embeds = [];
+      embedsDiv.querySelectorAll('.embed').forEach(embed => {
+        const [title, desc, color, urlE, image, thumb, footer] = embed.querySelectorAll('input, textarea');
+
+        const embedObj = {};
+        if (title.value) embedObj.title = title.value;
+        if (desc.value) embedObj.description = desc.value;
+        if (color.value) embedObj.color = parseInt(color.value.replace('#', ''), 16);
+        if (urlE.value) embedObj.url = urlE.value;
+        if (image.value) embedObj.image = { url: image.value };
+        if (thumb.value) embedObj.thumbnail = { url: thumb.value };
+        if (footer.value) embedObj.footer = { text: footer.value };
+
+        embeds.push(embedObj);
+      });
+
+      const payload = {};
+      if (msg) payload.content = msg;
+      if (embeds.length) payload.embeds = embeds;
+      if (username) payload.username = username;
+      if (avatar) payload.avatar_url = avatar;
+
+      try {
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(payload)
+        });
+
+        if (res.ok) {
+          statusDiv.textContent = '✅ Message sent with embed(s)!';
+          statusDiv.style.color = 'lightgreen';
+          messageInput.value = '';
+          embedsDiv.innerHTML = '';
+        } else {
+          statusDiv.textContent = '❌ Failed to send. Check your webhook.';
+          statusDiv.style.color = 'red';
+        }
+      } catch (err) {
+        statusDiv.textContent = '❌ Error sending.';
+        statusDiv.style.color = 'red';
+        console.error(err);
+      }
+    };
+  </script>
+</body>
+</html>
