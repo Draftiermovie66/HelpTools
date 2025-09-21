@@ -1,0 +1,477 @@
+/* Define a CSS variable for the glow color - blue */
+        :root {
+            --glow-color: #3b82f6; /* Blue-500 equivalent */
+            --glow-color-rgb-values: 59, 130, 246; /* Manually set for consistency */
+        }
+
+        /* Inter Font */
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+        }
+
+        /* Dark mode styles */
+        html.dark body {
+            background-color: #000000;
+            color: #e2e8f0;
+        }
+        /* Light mode styles */
+        html.light body {
+            background-color: #f7fafc; /* Very light gray */
+            color: #2d3748; /* Dark text */
+        }
+
+        /* Custom styles for the dark mode toggle */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #333333; /* Dark mode off state */
+            transition: .4s;
+            border-radius: 24px;
+        }
+        html.light .slider {
+            background-color: #cbd5e0; /* Light mode off state */
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--glow-color); /* Blue for on state */
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+
+        /* Navbar specific styles for glow and animation */
+        .navbar-container {
+            background-color: #000000; /* Dark mode */
+            box-shadow: 0 0 20px rgba(var(--glow-color-rgb-values), 0.7);
+            animation: navbarGlowPulse 3s infinite alternate ease-in-out;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            transition: background-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        html.light .navbar-container {
+            background-color: #ffffff; /* Light mode */
+            box-shadow: 0 0 10px rgba(var(--glow-color-rgb-values), 0.3); /* Subtle blue glow in light mode */
+            animation: navbarGlowPulseLight 3s infinite alternate ease-in-out;
+        }
+
+        /* Navbar Glow Pulse Animation - Dark Mode */
+        @keyframes navbarGlowPulse {
+            0% { box-shadow: 0 0 20px rgba(var(--glow-color-rgb-values), 0.7); }
+            100% { box-shadow: 0 0 30px rgba(var(--glow-color-rgb-values), 0.9); }
+        }
+        /* Navbar Glow Pulse Animation - Light Mode */
+        @keyframes navbarGlowPulseLight {
+            0% { box-shadow: 0 0 10px rgba(var(--glow-color-rgb-values), 0.3); }
+            100% { box-shadow: 0 0 15px rgba(var(--glow-color-rgb-values), 0.5); }
+        }
+
+
+        /* General element animations/transitions */
+        .animated-icon {
+            transition: transform 0.2s ease-in-out, filter 0.2s ease-in-out, color 0.3s ease-in-out;
+        }
+        .animated-icon:hover {
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 5px var(--glow-color));
+        }
+        html.light .animated-icon {
+            color: #2d3748; /* Dark text for icons in light mode */
+        }
+        html.light .animated-icon.glow-on-hover:hover {
+            color: var(--glow-color); /* Blue glow color on hover */
+        }
+
+        /* Nav link styling */
+        .nav-link {
+            display: block;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            color: #e2e8f0; /* Dark mode */
+            transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out, text-shadow 0.2s ease-in-out;
+            white-space: nowrap;
+        }
+        html.light .nav-link {
+            color: #2d3748; /* Light mode */
+        }
+        .nav-link:hover {
+            color: var(--glow-color);
+            text-shadow: 0 0 8px rgba(var(--glow-color-rgb-values), 0.8);
+            background-color: rgba(var(--glow-color-rgb-values), 0.1);
+        }
+        /* Search button styling */
+        .search-button {
+            padding: 0.5rem;
+            border-radius: 9999px;
+            background-color: #1a1a1a; /* Dark mode */
+            color: var(--glow-color); /* Blue icon */
+            transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        html.light .search-button {
+            background-color: #e2e8f0; /* Light mode */
+            color: #2d3748; /* Dark icon */
+        }
+        .search-button:hover {
+            background-color: #2d2d2d; /* Dark mode hover */
+            box-shadow: 0 0 10px rgba(var(--glow-color-rgb-values), 0.7);
+        }
+        html.light .search-button:hover {
+            background-color: #cbd5e0; /* Light mode hover */
+            box-shadow: 0 0 8px rgba(var(--glow-color-rgb-values), 0.5);
+        }
+
+        /* Main content area */
+        main {
+            flex-grow: 1;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* Bubbles Background Container */
+        .bubbles-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Bubble animation */
+        .bubbles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .bubbles li {
+            position: absolute;
+            display: block;
+            list-style: none;
+            width: 20px;
+            height: 20px;
+            background: rgba(var(--glow-color-rgb-values), 0.15); /* Using var for bubble color */
+            animation: animateBubbles 25s linear infinite;
+            bottom: -150px;
+            border-radius: 50%;
+        }
+
+        .bubbles li:nth-child(1) { left: 25%; width: 80px; height: 80px; animation-delay: 0s; animation-duration: 10s; }
+        .bubbles li:nth-child(2) { left: 10%; width: 20px; height: 20px; animation-delay: 2s; animation-duration: 12s; }
+        .bubbles li:nth-child(3) { left: 70%; width: 20px; height: 20px; animation-delay: 4s; animation-duration: 14s; }
+        .bubbles li:nth-child(4) { left: 40%; width: 60px; height: 60px; animation-delay: 0s; animation-duration: 18s; }
+        .bubbles li:nth-child(5) { left: 65%; width: 20px; height: 20px; animation-delay: 0s; animation-duration: 20s; }
+        .bubbles li:nth-child(6) { left: 75%; width: 110px; height: 110px; animation-delay: 3s; animation-duration: 13s; }
+        .bubbles li:nth-child(7) { left: 35%; width: 150px; height: 150px; animation-delay: 7s; animation-duration: 10s; }
+        .bubbles li:nth-child(8) { left: 50%; width: 25px; height: 25px; animation-delay: 15s; animation-duration: 16s; }
+        .bubbles li:nth-child(9) { left: 20%; width: 15px; height: 15px; animation-delay: 2s; animation-duration: 9s; }
+        .bubbles li:nth-child(10) { left: 85%; width: 150px; height: 150px; animation-delay: 11s; animation-duration: 10s; }
+
+        @keyframes animateBubbles {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; border-radius: 0; }
+            100% { transform: translateY(-1000px) rotate(720deg); opacity: 0; border-radius: 50%; }
+        }
+
+        /* Scrolling Text Animation */
+        .scroll-text-container {
+            overflow: hidden;
+            width: 100%;
+            white-space: nowrap;
+            box-sizing: border-box;
+            font-size: 0.875rem;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.7); /* Dark mode */
+        }
+        html.light .scroll-text-container {
+            color: rgba(45, 55, 72, 0.7); /* Light mode */
+        }
+
+        .scroll-text {
+            display: inline-block;
+            padding-left: 100%;
+            animation: scrollText 15s linear infinite;
+        }
+
+        @keyframes scrollText {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+
+        /* Mac Window Styling - now the primary content container */
+        .mac-window {
+            background-color: #1a1a1a; /* Dark mode */
+            border-radius: 12px; /* Less rounded corners */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(var(--glow-color-rgb-values), 0.05); /* Very subtle blue glow border */
+            width: 95%;
+            max-width: 900px;
+            margin-top: 3rem;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 10;
+            transition: transform 0.3s ease-out, box-shadow 0.3s ease-out, background-color 0.3s ease-in-out;
+            perspective: 1000px;
+        }
+        html.light .mac-window {
+            background-color: #ffffff; /* Light mode */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(var(--glow-color-rgb-values), 0.1); /* Lighter shadow/border */
+        }
+
+        /* 3D Perspective and Stronger Glow on Hover */
+        .mac-window:hover {
+            transform: rotateX(5deg) rotateY(5deg);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(var(--glow-color-rgb-values), 0.5); /* Dark mode hover */
+        }
+        html.light .mac-window:hover {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), 0 0 0 2px rgba(var(--glow-color-rgb-values), 0.3); /* Light mode hover */
+        }
+
+        /* Shiny Effect for Mac Window */
+        .mac-window::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
+            transform: skewX(-20deg);
+            transition: left 0.5s ease-in-out, opacity 0.5s ease-in-out;
+            opacity: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .mac-window:hover::before {
+            left: 100%;
+            opacity: 1;
+        }
+
+
+        .mac-window-header {
+            background-color: #383838; /* Dark mode */
+            padding: 8px 12px;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            position: relative;
+            z-index: 2;
+            transition: background-color 0.3s ease-in-out;
+        }
+        html.light .mac-window-header {
+            background-color: #e2e8f0; /* Light mode */
+        }
+
+
+        .traffic-lights span {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        .traffic-lights .close { background-color: #ff5f56; }
+        .traffic-lights .minimize { background-color: #ffbd2e; }
+        .traffic-lights .maximize { background-color: #27c93f; }
+
+        .mac-window-content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        /* Grid for images within Mac window */
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 1.5rem;
+            padding-top: 1.5rem;
+        }
+
+        @media (min-width: 640px) {
+            .image-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (min-width: 768px) {
+            .image-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .image-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            background-color: #2a2a2a; /* Dark mode */
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.3s ease-in-out;
+        }
+        html.light .image-item {
+            background-color: #ffffff; /* Light mode */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .image-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(var(--glow-color-rgb-values), 0.2); /* Dark mode hover */
+        }
+        html.light .image-item:hover {
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(var(--glow-color-rgb-values), 0.1); /* Light mode hover */
+        }
+
+        .image-link-wrapper {
+            display: block;
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            width: 100%;
+            padding-bottom: 60%;
+            height: 0;
+        }
+        .image-link-wrapper img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease-in-out;
+        }
+        .image-link-wrapper:hover img {
+            transform: scale(1.05);
+        }
+
+        .image-link-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 0.5rem;
+            color: #e2e8f0;
+            font-weight: 600;
+        }
+        .image-link-wrapper:hover .image-link-overlay {
+            opacity: 1;
+        }
+
+        .image-item-link {
+            color: var(--glow-color);
+            font-weight: 600;
+            margin-top: 1rem;
+            transition: color 0.2s ease-in-out;
+        }
+        .image-item-link:hover {
+            color: #60a5fa;
+            text-decoration: underline;
+        }
+
+        .image-description {
+            color: #a0aec0; /* Dark mode */
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+        html.light .image-description {
+            color: #4a5568; /* Light mode */
+        }
+
+        /* Responsive adjustments */
+        @media (min-width: 768px) { /* md breakpoint */
+            .navbar-container {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+            .navbar-mobile-elements {
+                display: none;
+            }
+            .navbar-links {
+                flex-grow: 1;
+                justify-content: center;
+            }
+            .navbar-right-section {
+                flex-grow: 0;
+                justify-content: flex-end;
+                margin-left: auto;
+            }
+        }
+        @media (max-width: 767px) { /* Mobile specific adjustments */
+            .navbar-container {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+            /* Hide desktop specific elements and navbar links on mobile */
+            .navbar-links,
+            .navbar-right-section {
+                display: none;
+            }
+            /* Make sure the mobile elements are visible */
+            .navbar-mobile-elements {
+                display: flex;
+            }
+            main {
+                min-height: calc(100vh - 60px);
+                padding-top: 1rem;
+                padding-bottom: 1rem;
+            }
+            .mac-window {
+                width: 95%;
+            }
+        }
